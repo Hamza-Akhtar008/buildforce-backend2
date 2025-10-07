@@ -22,9 +22,9 @@ config();
       password: process.env.DB_PASS,
       autoLoadEntities: true,
       synchronize: false,
-      // ssl: {
-      //   rejectUnauthorized: false,
-      // },
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
     AuthModule,
     LabourProfileModule,
