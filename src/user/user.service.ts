@@ -11,21 +11,20 @@ export class UserService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
   ) {}
-async  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     return await this.usersRepository.save(createUserDto);
   }
 
- async findAll() {
-   return await this.usersRepository.find();
+  async findAll() {
+    return await this.usersRepository.find();
   }
 
   async findByEmail(email: string) {
-    return await this.usersRepository.findOne({where:{email}});
-
+    return await this.usersRepository.findOne({ where: { email } });
   }
 
-  async findOne(id: number) {
-    return await this.usersRepository.findOne({where:{id}});
+  async findOne(id: bigint) {
+    return await this.usersRepository.findOne({ where: { id } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
