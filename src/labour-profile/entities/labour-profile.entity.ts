@@ -5,6 +5,7 @@ import {
   JoinTable,
   ManyToMany,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ExperienceRange, VerificationStatus } from '../enums/enum';
@@ -14,11 +15,11 @@ import { Skill } from 'src/skill/entities/skill.entity';
 
 @Entity('labour_profiles')
 export class LabourProfile {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryColumn({ type: 'bigint' })
   id: bigint;
-
-  @Column({ unique: true })
-  userId: bigint;
+  @OneToOne(() => User, (user) => user.labourProfile)
+  @JoinColumn({ name: 'id' })
+  user: User;
 
   @Column({ nullable: true })
   resumeUrl?: string;
@@ -45,27 +46,7 @@ export class LabourProfile {
   verificationStatus: VerificationStatus;
 
   // Relations
-  @OneToOne(() => User, (user) => user.labourProfile)
-  @JoinColumn({ name: 'userId' })
-  user: User;
 
-  @ManyToMany(() => Skill, { eager: true })
-  @JoinTable({
-    name: 'labour_profile_skills',
-    joinColumn: { name: 'labour_profile_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'skill_id', referencedColumnName: 'id' },
-  })
-  skills: Skill[];
-  // Relations - will need to be properly configured when other entities are created
-  // @OneToMany(() => LabourSkill, labourSkill => labourSkill.labour)
-  // skills: LabourSkill[];
-
-  // @OneToMany(() => LabourProject, labourProject => labourProject.labour)
-  // projects: LabourProject[];
-
-  // @OneToMany(() => Interview, interview => interview.labour)
-  // interviews: Interview[];
-
-  // @OneToMany(() => Application, application => application.labour)
-  // applications: Application[];
+  @Column({ nullable: true })
+  skills?: string;
 }

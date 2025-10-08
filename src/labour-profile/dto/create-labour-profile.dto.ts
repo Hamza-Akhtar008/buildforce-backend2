@@ -6,56 +6,52 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  IsUrl,
   ArrayNotEmpty,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { SkillLevel, VerificationStatus, ExperienceRange } from '../enums/enum';
 
 export class CreateLabourProfileDto {
   @ApiProperty({ description: 'User ID to attach the profile to', example: 1 })
-  @IsNumber()
   @IsNotEmpty()
-  userId: number;
+  // @Transform(({ value }) => BigInt(value))
+  id: bigint;
 
   @ApiProperty({
-    description: 'URL to the uploaded resume document',
-    example: 'https://storage.example.com/resumes/john-doe-resume.pdf',
+    description: 'Resume document file',
+    type: 'string',
+    format: 'binary',
     required: false,
   })
   @IsOptional()
-  @IsString()
-  @IsUrl()
-  resumeUrl?: string;
+  resume?: Express.Multer.File;
 
   @ApiProperty({
-    description: 'URL to the uploaded ID proof document',
-    example: 'https://storage.example.com/id-proofs/john-doe-id.pdf',
+    description: 'ID proof document file',
+    type: 'string',
+    format: 'binary',
     required: false,
   })
   @IsOptional()
-  @IsString()
-  @IsUrl()
-  idProofUrl?: string;
+  idProof?: Express.Multer.File;
 
   @ApiProperty({
-    description: 'URL to the uploaded certificate document',
-    example: 'https://storage.example.com/certificates/john-doe-cert.pdf',
+    description: 'Certificate document file',
+    type: 'string',
+    format: 'binary',
     required: false,
   })
   @IsOptional()
-  @IsString()
-  @IsUrl()
-  certificateUrl?: string;
+  certificate?: Express.Multer.File;
 
   @ApiProperty({
-    description: 'URL to the portfolio or work samples',
-    example: 'https://portfolio.example.com/john-doe',
+    description: 'Portfolio document file',
+    type: 'string',
+    format: 'binary',
     required: false,
   })
   @IsOptional()
-  @IsString()
-  @IsUrl()
-  portfolioUrl?: string;
+  portfolio?: Express.Multer.File;
 
   @ApiProperty({
     description: 'Skill level of the labour worker',
@@ -89,11 +85,10 @@ export class CreateLabourProfileDto {
 
   @ApiProperty({
     description: 'Array of skill IDs to associate with this labour profile',
-    type: [Number],
-    example: [1, 2, 5, 8],
+    type: String,
+    example: '1,2',
     required: false,
   })
   @IsOptional()
-  @IsArray()
-  skillIds?: number[];
+  skills?: string;
 }
