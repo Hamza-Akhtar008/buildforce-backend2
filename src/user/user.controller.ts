@@ -15,6 +15,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard, AdminGuard } from 'src/auth/guard';
 import { VerificationStatus } from 'src/labour-profile/enums/enum';
+import { UpdateStatusDto } from './dto/update-status.dto';
 
 @Controller('user')
 @ApiTags('user')
@@ -36,6 +37,7 @@ export class UserController {
   findAll() {
     return this.userService.findAll();
   }
+
   @UseGuards(AdminGuard)
   @Get('status/:status')
   findByStatus(@Param('status') status: VerificationStatus) {
@@ -46,9 +48,9 @@ export class UserController {
   @Post(':id/status')
   updateUserStatus(
     @Param('id') id: string,
-    @Body() status: VerificationStatus,
+    @Body() updateStatusDto: UpdateStatusDto,
   ) {
-    return this.userService.updateStatus(+id, status);
+    return this.userService.updateStatus(+id, updateStatusDto.status);
   }
 
   @Get(':id')
