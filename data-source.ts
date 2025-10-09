@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
-import 'tsconfig-paths/register';
+import 'tsconfig-paths/register.js';
 
 config();
 
@@ -15,7 +15,7 @@ const AppDataSource = new DataSource({
   entities: ['src/**/*.entity.ts'],
   migrations: ['src/migrations/*.{ts,js}'],
   synchronize: false,
-  // ssl: { rejectUnauthorized: false }, // enable if needed for hosted DBs
+  ssl: { rejectUnauthorized: false }, // enable if needed for hosted DBs
 });
 
 export default AppDataSource;

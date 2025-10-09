@@ -3,10 +3,10 @@ import { INestApplication } from '@nestjs/common';
 
 export function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle('Zara School')
-    .setDescription('API for Zara School backend')
+    .setTitle('Build force')
+    .setDescription('API for buildforce backend')
     .setVersion('1.0')
-    .addTag('zaraSchool')
+    .addTag('buildforce')
     .addBearerAuth()
     .build();
   const documentFactory = SwaggerModule.createDocument(app, config);

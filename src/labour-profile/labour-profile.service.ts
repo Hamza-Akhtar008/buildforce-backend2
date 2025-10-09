@@ -4,13 +4,43 @@ import { UpdateLabourProfileDto } from './dto/update-labour-profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LabourProfile } from './entities/labour-profile.entity';
 import { Repository } from 'typeorm';
+import { S3Service } from '../common/services/s3.service';
 
 @Injectable()
 export class LabourProfileService {
   @InjectRepository(LabourProfile)
   private readonly labourProfileRepository: Repository<LabourProfile>;
-  create(createLabourProfileDto: CreateLabourProfileDto) {
-    return 'This action adds a new labourProfile';
+
+  constructor(private readonly s3Service: S3Service) {}
+
+  async create(createLabourProfileDto: CreateLabourProfileDto) {
+    const { resume, idProof, certificate, portfolio, id, ...profileData } =
+      createLabourProfileDto;
+
+    // Upload files to S3 and get URLs
+    const uploadPromises = [];
+    const fileFields = { resume, idProof, certificate, portfolio };
+
+    for (const [fieldName, file] of Object.entries(fileFields)) {
+      if (file) {
+        uploadPromises.push(
+          this.s3Service
+            .uploadFile(file, `labour-profiles/user-${id}/${fieldName}`)
+            .then((url) => ({ fieldName, url })),
+        );
+      }
+    }
+
+    const uploadResults = await Promise.all(uploadPromises);
+
+    // Create the profile data with uploaded URLs
+    // Set id to userId since they should be the same (id is the foreign key to users table)
+    const profileToSave = { id: id, ...profileData };
+    uploadResults.forEach(({ fieldName, url }) => {
+      profileToSave[`${fieldName}Url`] = url;
+    });
+
+    return this.labourProfileRepository.save(profileToSave);
   }
 
   findAll() {
@@ -28,17 +58,54 @@ export class LabourProfileService {
   }
 
   async update(id: number, updateLabourProfileDto: UpdateLabourProfileDto) {
-    const obj = await this.labourProfileRepository.findOne({
+    const existingProfile = await this.labourProfileRepository.findOne({
       where: { id: BigInt(id) },
     });
-    if (!obj) {
+    if (!existingProfile) {
       throw new NotFoundException('Labour profile not found');
     }
-    Object.assign(obj, updateLabourProfileDto);
-    return obj;
+
+    const {
+      resume,
+      idProof,
+      certificate,
+      portfolio,
+      id: _,
+      ...profileData
+    } = updateLabourProfileDto;
+
+    // Upload new files to S3 and get URLs
+    const uploadPromises = [];
+    const fileFields = { resume, idProof, certificate, portfolio };
+
+    for (const [fieldName, file] of Object.entries(fileFields)) {
+      if (file) {
+        uploadPromises.push(
+          this.s3Service
+            .uploadFile(
+              file,
+              `labour-profiles/user-${id || existingProfile.id}/${fieldName}`,
+            )
+            .then((url) => ({ fieldName, url })),
+        );
+      }
+    }
+
+    const uploadResults = await Promise.all(uploadPromises);
+
+    // Create the update data with uploaded URLs
+    const updateData = { ...profileData };
+    uploadResults.forEach(({ fieldName, url }) => {
+      updateData[`${fieldName}Url`] = url;
+    });
+
+    // Only update fields that are provided
+    Object.assign(existingProfile, updateData);
+
+    return this.labourProfileRepository.save(existingProfile);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} labourProfile`;
+  async remove(id: number) {
+    return await this.labourProfileRepository.delete(id);
   }
 }
