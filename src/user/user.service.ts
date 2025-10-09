@@ -21,6 +21,11 @@ export class UserService {
   async updateStatus(id: number, verificationStatus: VerificationStatus) {
     return await this.usersRepository.update(id, { verificationStatus });
   }
+  async findByStatus(status: VerificationStatus) {
+    return await this.usersRepository.find({
+      where: { verificationStatus: status },
+    });
+  }
 
   async findAll() {
     return await this.usersRepository.find();

@@ -13,7 +13,8 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guard';
+import { JwtAuthGuard, AdminGuard } from 'src/auth/guard';
+import { VerificationStatus } from 'src/labour-profile/enums/enum';
 
 @Controller('user')
 @ApiTags('user')
@@ -30,10 +31,24 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(AdminGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
+  }
+  @UseGuards(AdminGuard)
+  @Get('status/:status')
+  findByStatus(@Param('status') status: VerificationStatus) {
+    return this.userService.findByStatus(status);
+  }
+
+  @UseGuards(AdminGuard)
+  @Post(':id/status')
+  updateUserStatus(
+    @Param('id') id: string,
+    @Body() status: VerificationStatus,
+  ) {
+    return this.userService.updateStatus(+id, status);
   }
 
   @Get(':id')

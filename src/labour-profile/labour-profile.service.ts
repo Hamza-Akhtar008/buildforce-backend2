@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateLabourProfileDto } from './dto/create-labour-profile.dto';
 import { UpdateLabourProfileDto } from './dto/update-labour-profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,6 +26,12 @@ export class LabourProfileService {
   async create(createLabourProfileDto: CreateLabourProfileDto) {
     const { resume, idProof, certificate, portfolio, id, ...profileData } =
       createLabourProfileDto;
+    const alreadyExist = await this.labourProfileRepository.findOne({
+      where: { id: BigInt(id) },
+    });
+    if (alreadyExist) {
+      throw new BadRequestException('Labour profile already exists');
+    }
 
     // Upload files to S3 and get URLs
     const uploadPromises = [];
