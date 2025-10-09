@@ -74,16 +74,6 @@ export class CreateLabourProfileDto {
   experienceRange?: ExperienceRange;
 
   @ApiProperty({
-    description: 'Current verification status of the labour profile',
-    enum: VerificationStatus,
-    example: VerificationStatus.pending,
-    required: false,
-  })
-  @IsOptional()
-  @IsEnum(VerificationStatus)
-  verificationStatus?: VerificationStatus;
-
-  @ApiProperty({
     description: 'Array of skill IDs to associate with this labour profile',
     type: String,
     example: '1,2',

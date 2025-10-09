@@ -18,12 +18,17 @@ export class AuthService {
   }
 
   async assignToken(user: any) {
-   
-    const payload = { username: user.email, sub: user.id, role: user.role,store:user.store };
+    const payload = {
+      username: user.email,
+      sub: user.id,
+      role: user.role,
+      store: user.store,
+    };
     return {
       access_token: this.jwtService.sign(payload),
       role: user.role,
-      id:payload.sub,
+      verificationStatus: user.verificationStatus,
+      id: payload.sub,
     };
   }
 }

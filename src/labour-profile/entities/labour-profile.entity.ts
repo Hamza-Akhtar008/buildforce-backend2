@@ -38,15 +38,7 @@ export class LabourProfile {
   @Column({ nullable: true })
   experienceRange?: ExperienceRange;
 
-  @Column({
-    type: 'enum',
-    enum: VerificationStatus,
-    default: VerificationStatus.pending,
-  })
-  verificationStatus: VerificationStatus;
-
   // Relations
-
   @Column({ nullable: true })
   skills?: string;
 }
