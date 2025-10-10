@@ -25,8 +25,7 @@ export class AdminGuard extends JwtAuthGuard implements CanActivate {
     // Check if user has Admin role
     if (
       !user ||
-      user.role !== UserRole.SuperAdmin ||
-      user.role !== UserRole.Admin
+      (user.role !== UserRole.SuperAdmin && user.role !== UserRole.Admin)
     ) {
       throw new ForbiddenException('Access denied. Admin role required.');
     }
