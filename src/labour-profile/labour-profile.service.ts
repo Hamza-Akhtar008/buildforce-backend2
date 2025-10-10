@@ -36,7 +36,7 @@ export class LabourProfileService {
     // Upload files to S3 and get URLs
     const uploadPromises = [];
     const fileFields = { resume, idProof, certificate, portfolio };
-
+console.log(fileFields);
     for (const [fieldName, file] of Object.entries(fileFields)) {
       if (file) {
         uploadPromises.push(

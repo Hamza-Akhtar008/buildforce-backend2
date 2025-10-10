@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { Upload } from "@aws-sdk/lib-storage";
 import { v4 as uuidv4 } from 'uuid';
+import * as path from 'path';
+import * as fs from 'fs';
 
 @Injectable()
 export class S3Service {
@@ -20,17 +23,36 @@ export class S3Service {
   }
 
   async uploadFile(file: Express.Multer.File, folder: string): Promise<string> {
+       const filePath = path.resolve(file.path); // where multer stored it
+    const fileStream = fs.createReadStream(filePath);
     const fileExtension = file.originalname.split('.').pop();
     const fileName = `${folder}/${uuidv4()}.${fileExtension}`;
+    console.log("i am file",file)
+    // const command = new PutObjectCommand({
+    //   Bucket: this.bucketName,
+    //   Key: fileName,
+    //   Body: file.buffer,
+    //   ContentType: file.mimetype,
+    // });
 
-    const command = new PutObjectCommand({
+    // await this.s3Client.send(command);
+      const upload = new Upload({
+    client: this.s3Client,
+    params: {
       Bucket: this.bucketName,
       Key: fileName,
-      Body: file.buffer,
+      Body: fileStream,
       ContentType: file.mimetype,
-    });
+    },
+  });
 
-    await this.s3Client.send(command);
+
+  upload.on("httpUploadProgress", (progress) => {
+    console.log(progress);
+  });
+
+  await upload.done();
+  console.log("✅ File uploaded successfully!");
 
     return `https://${this.bucketName}.s3.amazonaws.com/${fileName}`;
   }

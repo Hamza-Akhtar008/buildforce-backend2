@@ -9,6 +9,7 @@ import { config } from 'dotenv';
 import { LabourProfileModule } from './labour-profile/labour-profile.module';
 import { SkillModule } from './skill/skill.module';
 import { AdminProfileModule } from './admin-profile/admin-profile.module';
+import { InterviewModule } from './interview/interview.module';
 
 config();
 @Module({
@@ -32,6 +33,7 @@ config();
     LabourProfileModule,
     SkillModule,
     AdminProfileModule,
+    InterviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],
