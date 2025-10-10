@@ -1,5 +1,6 @@
 export enum VerificationStatus {
   pending = 'pending',
+  submitted = 'submitted',
   interview = 'interview',
   verified = 'verified',
   rejected = 'rejected',

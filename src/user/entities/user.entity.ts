@@ -1,4 +1,6 @@
+import { IsOptional } from 'class-validator';
 import { LabourProfile } from 'src/labour-profile/entities/labour-profile.entity';
+import { VerificationStatus } from 'src/labour-profile/enums/enum';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -23,7 +25,7 @@ export class User {
   @Column()
   name: string;
 
-  @Column({ unique: true })
+  @Column()
   phone: string;
 
   @Column({ unique: true })
@@ -50,6 +52,13 @@ export class User {
   // Relations - will need to be properly configured when other entities are created
   @OneToOne(() => LabourProfile, (labourProfile) => labourProfile.user)
   labourProfile?: LabourProfile;
+
+  @Column({
+    type: 'enum',
+    enum: VerificationStatus,
+    default: VerificationStatus.pending,
+  })
+  verificationStatus: VerificationStatus;
 
   // @OneToMany(() => Job, job => job.postedBy)
   // postedJobs: Job[];

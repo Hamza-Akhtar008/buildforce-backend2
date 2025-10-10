@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { config } from 'dotenv';
 import { LabourProfileModule } from './labour-profile/labour-profile.module';
 import { SkillModule } from './skill/skill.module';
+import { AdminProfileModule } from './admin-profile/admin-profile.module';
+
 config();
 @Module({
   imports: [
@@ -29,6 +31,7 @@ config();
     AuthModule,
     LabourProfileModule,
     SkillModule,
+    AdminProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

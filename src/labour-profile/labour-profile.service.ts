@@ -1,21 +1,37 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateLabourProfileDto } from './dto/create-labour-profile.dto';
 import { UpdateLabourProfileDto } from './dto/update-labour-profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LabourProfile } from './entities/labour-profile.entity';
 import { Repository } from 'typeorm';
 import { S3Service } from '../common/services/s3.service';
+import { VerificationStatus } from './enums/enum';
+
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class LabourProfileService {
   @InjectRepository(LabourProfile)
   private readonly labourProfileRepository: Repository<LabourProfile>;
 
-  constructor(private readonly s3Service: S3Service) {}
+  constructor(
+    private readonly s3Service: S3Service,
+    private readonly userService: UserService,
+  ) {}
 
   async create(createLabourProfileDto: CreateLabourProfileDto) {
     const { resume, idProof, certificate, portfolio, id, ...profileData } =
       createLabourProfileDto;
+    const alreadyExist = await this.labourProfileRepository.findOne({
+      where: { id: BigInt(id) },
+    });
+    if (alreadyExist) {
+      throw new BadRequestException('Labour profile already exists');
+    }
 
     // Upload files to S3 and get URLs
     const uploadPromises = [];
@@ -39,6 +55,7 @@ export class LabourProfileService {
     uploadResults.forEach(({ fieldName, url }) => {
       profileToSave[`${fieldName}Url`] = url;
     });
+    this.userService.updateStatus(Number(id), VerificationStatus.submitted);
 
     return this.labourProfileRepository.save(profileToSave);
   }

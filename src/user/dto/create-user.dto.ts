@@ -8,6 +8,7 @@ import {
   IsOptional,
   MinLength,
 } from 'class-validator';
+import { VerificationStatus } from 'src/labour-profile/enums/enum';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'Hamza Akhtar' })
@@ -25,10 +26,14 @@ export class CreateUserDto {
   location: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: 'securePassword123', minLength: 6 })
-  @MinLength(6)
+  @ApiProperty({ example: '1234', minLength: 3 })
+  @MinLength(3)
   password: string;
   @ApiProperty({ enum: UserRole, example: UserRole.Labour })
   @IsEnum(UserRole)
   role: UserRole;
+
+  // @IsOptional()
+  // @IsEnum(VerificationStatus)
+  // verificationStatus: VerificationStatus;
 }
