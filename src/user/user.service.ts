@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { VerificationStatus } from 'src/labour-profile/enums/enum';
 
@@ -28,7 +28,10 @@ export class UserService {
   }
 
   async findAll() {
-    return await this.usersRepository.find();
+    return await this.usersRepository.find({
+      where: { role: UserRole.Labour },
+      relations: ['labourProfile'],
+    });
   }
 
   async findByEmail(email: string) {
