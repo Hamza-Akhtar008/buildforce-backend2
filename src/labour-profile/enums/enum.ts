@@ -3,6 +3,7 @@ export enum VerificationStatus {
   submitted = 'submitted',
   interview = 'interview',
   interviewed = 'interviewed',
+  interview_fixed = 'interview_fixed',
   verified = 'verified',
   rejected = 'rejected',
 }

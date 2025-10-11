@@ -32,7 +32,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @Get()
   findAll() {
     return this.userService.findAll();

@@ -5,10 +5,11 @@ import { Interview } from './entities/interview.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { urlToHttpOptions } from 'url';
+import { VerificationStatus } from 'src/labour-profile/enums/enum';
 
 @Injectable()
 export class InterviewService {
-   constructor(
+  constructor(
     @InjectRepository(Interview)
     private readonly interviewRepository: Repository<Interview>,
   ) {}
@@ -22,10 +23,10 @@ export class InterviewService {
 
   findOne(id: number) {
     return this.interviewRepository.findOne({
-      where:{
-        id
-      }
-    })
+      where: {
+        id,
+      },
+    });
   }
 
   update(id: number, updateInterviewDto: UpdateInterviewDto) {
@@ -36,11 +37,11 @@ export class InterviewService {
     return this.interviewRepository.delete(id);
   }
 
-  async findByLabourId(id: number){
+  async findByLabourId(id: number) {
     return this.interviewRepository.find({
-      where:{
-        candidateId: id
-      }
-    })
+      where: {
+        candidateId: id,
+      },
+    });
   }
 }

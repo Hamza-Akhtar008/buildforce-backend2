@@ -50,10 +50,20 @@ export class InterviewController {
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateInterviewDto: UpdateInterviewDto,
   ) {
+    const interview = await this.interviewService.findOne(+id);
+    if (
+      updateInterviewDto.selectedDate &&
+      updateInterviewDto.selectedTimeSlot
+    ) {
+      await this.userService.updateStatus(
+        interview.candidateId,
+        VerificationStatus.interview_fixed,
+      );
+    }
     return this.interviewService.update(+id, updateInterviewDto);
   }
 
