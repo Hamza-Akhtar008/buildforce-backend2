@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateInterviewDto {
   @ApiProperty()
@@ -13,6 +13,14 @@ export class CreateInterviewDto {
   @ApiProperty({
     description: 'The id of the labour for which interview has to create',
   })
+  @IsOptional()
+  @ApiProperty({ example: '10-10-2025' })
+  selectedDate: string;
+  @IsOptional()
+  @ApiProperty({ example: '10:00AM' })
+  selectedTimeSlot: string;
+
   @IsNumber()
+  @ApiProperty({ example: 1 })
   candidateId: number;
 }

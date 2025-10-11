@@ -14,12 +14,10 @@ export class Interview extends BaseEntity {
   @Column()
   candidateId: number;
 
-  @Column()
-  @IsOptional()
+  @Column({ nullable: true })
   selectedDate: string;
 
-  @Column()
-  @IsOptional()
+  @Column({ nullable: true })
   selectedTimeSlot: string;
 
   @OneToOne(() => User, { onDelete: 'CASCADE' })
