@@ -6,21 +6,32 @@ import {
   Patch,
   Param,
   Delete,
+  Inject,
 } from '@nestjs/common';
 import { InterviewService } from './interview.service';
 import { CreateInterviewDto } from './dto/create-interview.dto';
 import { UpdateInterviewDto } from './dto/update-interview.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { UserService } from 'src/user/user.service';
+import { VerificationStatus } from 'src/labour-profile/enums/enum';
 
 @ApiTags('interview')
 @Controller('interview')
 export class InterviewController {
-  constructor(private readonly interviewService: InterviewService) {}
+  constructor(
+    private readonly interviewService: InterviewService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
-  create(@Body() createInterviewDto: CreateInterviewDto) {
-    console.log(createInterviewDto, 'createInterviewDto');
-    return this.interviewService.create(createInterviewDto);
+  async create(@Body() createInterviewDto: CreateInterviewDto) {
+    // console.log(createInterviewDto, 'createInterviewDto');
+    const data = await this.interviewService.create(createInterviewDto);
+    await this.userService.updateStatus(
+      createInterviewDto.candidateId,
+      VerificationStatus.interview,
+    );
+    return data;
   }
 
   @Get()

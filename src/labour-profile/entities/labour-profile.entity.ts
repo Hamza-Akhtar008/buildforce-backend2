@@ -38,7 +38,7 @@ export class LabourProfile {
   @Column({ nullable: true })
   experienceRange?: ExperienceRange;
 
-  // Relations
+  // Relationsd
   @Column({ nullable: true })
   skills?: string;
 }
