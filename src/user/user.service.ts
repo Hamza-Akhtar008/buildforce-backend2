@@ -15,7 +15,10 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     return await this.usersRepository.save({
       ...createUserDto,
-      verificationStatus: VerificationStatus.pending,
+      verificationStatus:
+        createUserDto.role === UserRole.Labour
+          ? VerificationStatus.pending
+          : VerificationStatus.verified,
     });
   }
   async updateStatus(id: number, verificationStatus: VerificationStatus) {

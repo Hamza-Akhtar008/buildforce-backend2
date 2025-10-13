@@ -10,6 +10,9 @@ import { LabourProfileModule } from './labour-profile/labour-profile.module';
 import { SkillModule } from './skill/skill.module';
 import { AdminProfileModule } from './admin-profile/admin-profile.module';
 import { InterviewModule } from './interview/interview.module';
+import { ProjectModule } from './project/project.module';
+import { CompanyProfileModule } from './company-profile/company-profile.module';
+import { JobModule } from './job/job.module';
 
 config();
 @Module({
@@ -34,6 +37,9 @@ config();
     SkillModule,
     AdminProfileModule,
     InterviewModule,
+    ProjectModule,
+    CompanyProfileModule,
+    JobModule,
   ],
   controllers: [AppController],
   providers: [AppService],

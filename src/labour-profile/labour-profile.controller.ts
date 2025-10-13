@@ -14,9 +14,10 @@ import { LabourProfileService } from './labour-profile.service';
 import { CreateLabourProfileDto } from './dto/create-labour-profile.dto';
 import { UpdateLabourProfileDto } from './dto/update-labour-profile.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { multerConfig } from '../common/config/multer.config';
 
+@ApiTags('Labour Profiles')
 @Controller('labour-profile')
 export class LabourProfileController {
   constructor(private readonly labourProfileService: LabourProfileService) {}

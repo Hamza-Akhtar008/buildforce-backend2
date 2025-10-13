@@ -1,6 +1,8 @@
 import { IsOptional } from 'class-validator';
+import { CompanyProfile } from 'src/company-profile/entities/company-profile.entity';
 import { LabourProfile } from 'src/labour-profile/entities/labour-profile.entity';
 import { VerificationStatus } from 'src/labour-profile/enums/enum';
+import { Project } from 'src/project/entities/project.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -13,6 +15,7 @@ import {
 
 export enum UserRole {
   SuperAdmin = 'SuperAdmin',
+  Company = 'Company',
   Admin = 'Admin',
   Labour = 'Labour',
 }
@@ -52,6 +55,12 @@ export class User {
   // Relations - will need to be properly configured when other entities are created
   @OneToOne(() => LabourProfile, (labourProfile) => labourProfile.user)
   labourProfile?: LabourProfile;
+
+  @OneToOne(() => CompanyProfile, (companyProfile) => companyProfile.user)
+  companyProfile?: CompanyProfile;
+
+  @OneToMany(() => Project, (project) => project.owner)
+  projects: Project[];
 
   @Column({
     type: 'enum',

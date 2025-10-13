@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AdminProfileService } from './admin-profile.service';
 import { CreateAdminProfileDto } from './dto/create-admin-profile.dto';
 import { UpdateAdminProfileDto } from './dto/update-admin-profile.dto';
 
+@ApiTags('Admin Profiles')
 @Controller('admin-profile')
 export class AdminProfileController {
   constructor(private readonly adminProfileService: AdminProfileService) {}
@@ -23,7 +33,10 @@ export class AdminProfileController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminProfileDto: UpdateAdminProfileDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAdminProfileDto: UpdateAdminProfileDto,
+  ) {
     return this.adminProfileService.update(+id, updateAdminProfileDto);
   }
 
