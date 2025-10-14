@@ -13,14 +13,8 @@ export class JobService {
   ) {}
 
   async create(createJobDto: CreateJobDto) {
-    const { projectId, ...jobData } = createJobDto;
-
-    const jobToSave: Partial<Job> = {
-      ...jobData,
-      projectId: BigInt(projectId),
-    };
-
-    return await this.jobRepository.save(jobToSave as Job);
+    const job = this.jobRepository.create(createJobDto);
+    return await this.jobRepository.save(job);
   }
 
   findAll() {
@@ -40,15 +34,7 @@ export class JobService {
     if (!existing) {
       throw new NotFoundException('Job not found');
     }
-
-    const { projectId, ...updateData } = updateJobDto as any;
-    const patch: Partial<Job> = { ...updateData } as Partial<Job>;
-    if (projectId !== undefined) {
-      patch.projectId = BigInt(projectId);
-    }
-
-    Object.assign(existing, patch);
-    return await this.jobRepository.save(existing);
+    return await this.jobRepository.update({ id }, updateJobDto);
   }
 
   async remove(id: number) {

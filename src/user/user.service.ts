@@ -32,7 +32,7 @@ export class UserService {
 
   async findAll() {
     return await this.usersRepository.find({
-      where: { role: UserRole.Labour },
+      // where: { role: UserRole.Labour },
       relations: ['labourProfile'],
     });
   }

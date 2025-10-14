@@ -55,6 +55,5 @@ export class CreateJobDto {
 
   @ApiProperty({ description: 'Project ID to attach this job to', example: 1 })
   @IsNumber()
-  @IsNumberString()
   projectId: bigint;
 }
