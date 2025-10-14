@@ -18,7 +18,7 @@ import { VerificationStatus } from 'src/labour-profile/enums/enum';
 import { UpdateStatusDto } from './dto/update-status.dto';
 
 @Controller('user')
-@ApiTags('user')
+@ApiTags('User')
 @ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}

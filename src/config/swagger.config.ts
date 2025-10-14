@@ -7,7 +7,16 @@ export function setupSwagger(app: INestApplication) {
     .setDescription('API for buildforce backend')
     .setVersion('1.0')
     .addTag('buildforce')
+    .addTag('Auth')
+    .addTag('User')
+    .addTag('Labour Profiles')
+    .addTag('Company Profiles')
+    .addTag('Admin Profiles')
+    .addTag('Interview')
+    .addTag('Projects')
+    .addTag('Jobs')
     .addBearerAuth()
+
     .build();
   const documentFactory = SwaggerModule.createDocument(app, config);
 

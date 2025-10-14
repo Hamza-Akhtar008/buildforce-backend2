@@ -15,7 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { UserService } from 'src/user/user.service';
 import { VerificationStatus } from 'src/labour-profile/enums/enum';
 
-@ApiTags('interview')
+@ApiTags('Interview')
 @Controller('interview')
 export class InterviewController {
   constructor(
