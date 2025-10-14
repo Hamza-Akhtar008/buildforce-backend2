@@ -15,6 +15,7 @@ export function setupSwagger(app: INestApplication) {
     .addTag('Interview')
     .addTag('Projects')
     .addTag('Jobs')
+    .addTag('Job Applications')
     .addBearerAuth()
 
     .build();

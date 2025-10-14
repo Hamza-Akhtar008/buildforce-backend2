@@ -3,6 +3,7 @@ import { BaseEntity } from 'base.entity';
 import { ProjectStatus } from '../enums/project-status.enum';
 import { User } from 'src/user/entities/user.entity';
 import { Job } from 'src/job/entities/job.entity';
+import { CompanyProfile } from 'src/company-profile/entities/company-profile.entity';
 
 @Entity('projects')
 export class Project extends BaseEntity {
@@ -31,12 +32,16 @@ export class Project extends BaseEntity {
   @Column({ type: 'bigint' })
   ownerId: bigint;
 
-  @ManyToOne(() => User, (user) => user.projects, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
+  @ManyToOne(
+    () => CompanyProfile,
+    (companyProfile) => companyProfile.projects,
+    {
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+  )
   @JoinColumn({ name: 'ownerId' })
-  owner: User;
+  owner: CompanyProfile;
 
   @OneToMany(() => Job, (job) => job.project)
   jobs: Job[];

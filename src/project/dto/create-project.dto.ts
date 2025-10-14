@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsEnum,
   IsOptional,
+  IsBoolean,
 } from 'class-validator';
 import { ProjectStatus } from '../enums/project-status.enum';
 

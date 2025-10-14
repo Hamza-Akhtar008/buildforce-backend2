@@ -13,6 +13,7 @@ import { InterviewModule } from './interview/interview.module';
 import { ProjectModule } from './project/project.module';
 import { CompanyProfileModule } from './company-profile/company-profile.module';
 import { JobModule } from './job/job.module';
+import { JobApplicaitonModule } from './job-applicaiton/job-applicaiton.module';
 
 config();
 @Module({
@@ -37,9 +38,10 @@ config();
     SkillModule,
     AdminProfileModule,
     InterviewModule,
-    ProjectModule,
     CompanyProfileModule,
+    ProjectModule,
     JobModule,
+    JobApplicaitonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

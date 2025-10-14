@@ -1,5 +1,6 @@
 import { IsOptional } from 'class-validator';
 import { CompanyProfile } from 'src/company-profile/entities/company-profile.entity';
+import { AdminProfile } from 'src/admin-profile/entities/admin-profile.entity';
 import { LabourProfile } from 'src/labour-profile/entities/labour-profile.entity';
 import { VerificationStatus } from 'src/labour-profile/enums/enum';
 import { Project } from 'src/project/entities/project.entity';
@@ -59,8 +60,8 @@ export class User {
   @OneToOne(() => CompanyProfile, (companyProfile) => companyProfile.user)
   companyProfile?: CompanyProfile;
 
-  @OneToMany(() => Project, (project) => project.owner)
-  projects: Project[];
+  @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.user)
+  adminProfile?: AdminProfile;
 
   @Column({
     type: 'enum',

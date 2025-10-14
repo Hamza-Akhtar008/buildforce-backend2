@@ -25,7 +25,7 @@ export class ProjectService {
 
   async findAll(): Promise<Project[]> {
     return await this.projectRepository.find({
-      where: { isActive: true },
+      // where: { isActive: true },
       order: { createdAt: 'DESC' },
     });
   }
@@ -52,8 +52,6 @@ export class ProjectService {
   }
 
   async remove(id: number): Promise<void> {
-    const project = await this.findOne(id);
-    project.isActive = false;
-    await this.projectRepository.save(project);
+    await this.projectRepository.delete(id);
   }
 }

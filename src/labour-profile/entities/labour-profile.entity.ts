@@ -4,6 +4,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
@@ -12,6 +13,7 @@ import { ExperienceRange, VerificationStatus } from '../enums/enum';
 import { SkillLevel } from '../enums/enum';
 import { User } from 'src/user/entities/user.entity';
 import { Skill } from 'src/skill/entities/skill.entity';
+import { JobApplicaiton } from 'src/job-applicaiton/entities/job-applicaiton.entity';
 
 @Entity('labour_profiles')
 export class LabourProfile {
@@ -41,4 +43,7 @@ export class LabourProfile {
   // Relationsd
   @Column({ nullable: true })
   skills?: string;
+
+  @OneToMany(() => JobApplicaiton, (jobApplication) => jobApplication.applicant)
+  jobApplications: JobApplicaiton[];
 }
