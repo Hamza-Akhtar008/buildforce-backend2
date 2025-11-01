@@ -9,6 +9,6 @@ import { CreateUserDto } from './dto/create-user.dto';
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService,UserController,CreateUserDto] // Exporting the service to be used in other modules
+  exports: [UserService] // Exporting the service to be used in other modules
 })
 export class UserModule {}

@@ -9,7 +9,7 @@ import {
   UseInterceptors,
   UploadedFiles,
 } from '@nestjs/common';
-import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { CompanyProfileService } from './company-profile.service';
 import { CreateCompanyProfileDto } from './dto/create-company-profile.dto';
 import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
@@ -22,37 +22,40 @@ import { CreateCompanyrWithUserDto } from './dto/create-company-profile-with-use
 @Controller('company-profile')
 export class CompanyProfileController {
   constructor(private readonly companyProfileService: CompanyProfileService,private readonly userService: UserService,) {}
+@ApiConsumes('multipart/form-data')
+@ApiBody({ type: CreateCompanyrWithUserDto })
+@UseInterceptors(AnyFilesInterceptor(multerConfig))
+@Post()
+@Post()
 
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: CreateCompanyrWithUserDto })
-  @UseInterceptors(AnyFilesInterceptor(multerConfig))
-  @Post()
-  async create(
-    @Body() body: CreateCompanyrWithUserDto,
-    @UploadedFiles() files: Express.Multer.File[],
-  ) {
-    const { user,companyProfile } = body;
+async create(
+  @Body() body: any,
+  @UploadedFiles() files: Express.Multer.File[],
+) {
+  // 👇 Parse JSON strings coming from multipart/form-data
+  const createUserWithCompanyDto = {
+    user: JSON.parse(body.user),
+    companyProfile: JSON.parse(body.companyProfile),
+  };
 
-    // 1️⃣ Create user first
-    const newUser = await this.userService.create(user);
+  console.log('Parsed DTO:', createUserWithCompanyDto);
 
-    // 2️⃣ Attach uploaded file (logo)
-    if (files && files.length > 0) {
-      companyProfile.logo = files.find((f) => f.fieldname === 'logo');
-    }
+  // 1️⃣ Create user
+  const newUser = await this.userService.create(createUserWithCompanyDto.user);
 
-    // 3️⃣ Link userId to company profile
-    const companyprofile = await this.companyProfileService.create({
-      ...companyProfile,
-      id: newUser.id,
-    });
+  // 2️⃣ Create company profile
+  const companyprofile = await this.companyProfileService.create({
+    ...createUserWithCompanyDto.companyProfile,
+    id: newUser.id,
+  });
 
-    return {
-      message: 'User and company profile created successfully',
-      user: newUser,
-      companyProfile,
-    };
-  }
+  return {
+    message: 'User and company profile created successfully',
+    user: newUser,
+    companyprofile,
+  };
+}
+
 
 
   @Get()

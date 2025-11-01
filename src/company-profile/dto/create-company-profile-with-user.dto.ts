@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CreateCompanyProfileDto } from './create-company-profile.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserRole } from 'src/user/entities/user.entity';
+import { ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateCompanyrWithUserDto {
   @ApiProperty({
@@ -15,12 +17,14 @@ export class CreateCompanyrWithUserDto {
       role: UserRole.Company,
     },
   })
+  @ValidateNested()
+  @Type(() => CreateUserDto) 
   user: CreateUserDto;
 
   @ApiProperty({
     type: CreateCompanyProfileDto,
     example: {
-      id: 1,
+      
       name: "Tech Innovators Pvt Ltd",
       about:
         "Tech Innovators is a leading AI-based software company focusing on automation and intelligent systems.",
@@ -28,5 +32,7 @@ export class CreateCompanyrWithUserDto {
       logo: "https://example.com/company-logo.png",
     },
   })
+    @ValidateNested()
+  @Type(() => CreateCompanyProfileDto)
   companyProfile: CreateCompanyProfileDto;
 }
