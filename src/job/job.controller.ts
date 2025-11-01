@@ -21,11 +21,12 @@ export class JobController {
   create(@Body() createJobDto: CreateJobDto) {
     return this.jobService.create(createJobDto);
   }
-
-  @Get()
-  findAll() {
-    return this.jobService.findAll();
-  }
+@Get()
+findAll() {
+  return this.jobService.findAll({
+    relations: ['project', 'project.owner'],
+  });
+}
 
   @Get(':id')
   findOne(@Param('id') id: string) {

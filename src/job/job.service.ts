@@ -33,9 +33,12 @@ export class JobService {
   return await this.jobRepository.save(job);
 }
 
-  findAll() {
-    return this.jobRepository.find();
-  }
+ async findAll(options?: any) {
+  return this.jobRepository.find({
+    relations: options?.relations || [],
+  });
+}
+
 
   async findOne(id: number) {
     const job = await this.jobRepository.findOne({ where: { id } });
