@@ -26,7 +26,6 @@ export class CompanyProfileController {
 @ApiBody({ type: CreateCompanyrWithUserDto })
 @UseInterceptors(AnyFilesInterceptor(multerConfig))
 @Post()
-@Post()
 
 async create(
   @Body() body: any,
@@ -42,12 +41,13 @@ async create(
 
   // 1️⃣ Create user
   const newUser = await this.userService.create(createUserWithCompanyDto.user);
-
+ const logoFile = files?.find((f) => f.fieldname === 'logo');
   // 2️⃣ Create company profile
-  const companyprofile = await this.companyProfileService.create({
-    ...createUserWithCompanyDto.companyProfile,
-    id: newUser.id,
-  });
+ const companyprofile = await this.companyProfileService.create({
+      ...createUserWithCompanyDto.companyProfile,
+      id: newUser.id,
+      logo: logoFile || createUserWithCompanyDto.companyProfile.logo, // Pass file or string
+    });
 
   return {
     message: 'User and company profile created successfully',

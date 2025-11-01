@@ -22,37 +22,43 @@ export class CompanyProfileService {
     private readonly userService: UserService,
   ) {}
 
-  async create(createCompanyProfileDto: CreateCompanyProfileDto) {
-    const { logo, id, ...profileData } = createCompanyProfileDto;
+async create(createCompanyProfileDto: any) {
+  const { logo, id, ...profileData } = createCompanyProfileDto;
 
-    const alreadyExist = await this.companyProfileRepository.findOne({
-      where: { id: BigInt(id) },
-    });
-    if (alreadyExist) {
-      throw new BadRequestException('Company profile already exists');
+  const alreadyExist = await this.companyProfileRepository.findOne({
+    where: { id: BigInt(id) },
+  });
+  if (alreadyExist) {
+    throw new BadRequestException('Company profile already exists');
+  }
+
+  let logoUrl: string | undefined;
+
+  // ✅ Handle both cases: uploaded file OR existing URL
+  if (logo) {
+    // If logo is a string (URL)
+    if (typeof logo === 'string') {
+      logoUrl = logo;
     }
-
-    // Upload logo to S3 and get URL
-    let logoUrl: string | undefined;
-    if (logo) {
+    // If logo is a file (from Multer)
+    else if (typeof logo === 'object' && 'buffer' in logo) {
       logoUrl = await this.s3Service.uploadFile(
-        logo,
+        logo as Express.Multer.File,
         `company-profiles/user-${id}/logo`,
       );
     }
-
-    // Create the profile data with uploaded URL
-    const profileToSave = {
-      id: id,
-      ...profileData,
-      logoUrl,
-    };
-
-    // Update user verification status
-    this.userService.updateStatus(Number(id), VerificationStatus.submitted);
-
-    return this.companyProfileRepository.save(profileToSave);
   }
+
+  const profileToSave = {
+    id,
+    ...profileData,
+    logo: logoUrl,
+  };
+
+  await this.userService.updateStatus(Number(id), VerificationStatus.submitted);
+
+  return this.companyProfileRepository.save(profileToSave);
+}
 
   findAll() {
     return this.companyProfileRepository.find();

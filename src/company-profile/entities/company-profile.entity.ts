@@ -23,7 +23,7 @@ export class CompanyProfile {
   name: string;
 
   @Column({ nullable: true })
-  logo?: string;
+  logoUrl?: string;
 
   @Column({ type: 'text', nullable: true })
   about?: string;

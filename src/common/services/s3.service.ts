@@ -22,30 +22,21 @@ export class S3Service {
     this.bucketName = process.env.AWS_S3_BUCKET_NAME;
   }
 
-  async uploadFile(file: Express.Multer.File, folder: string): Promise<string> {
-       const filePath = path.resolve(file.path); // where multer stored it
-    const fileStream = fs.createReadStream(filePath);
-    const fileExtension = file.originalname.split('.').pop();
-    const fileName = `${folder}/${uuidv4()}.${fileExtension}`;
-    console.log("i am file",file)
-    // const command = new PutObjectCommand({
-    //   Bucket: this.bucketName,
-    //   Key: fileName,
-    //   Body: file.buffer,
-    //   ContentType: file.mimetype,
-    // });
+ async uploadFile(file: Express.Multer.File, folder: string): Promise<string> {
+  const fileExtension = file.originalname.split('.').pop();
+  const fileName = `${folder}/${uuidv4()}.${fileExtension}`;
 
-    // await this.s3Client.send(command);
-      const upload = new Upload({
+  console.log("Uploading file:", file.originalname);
+
+  const upload = new Upload({
     client: this.s3Client,
     params: {
       Bucket: this.bucketName,
       Key: fileName,
-      Body: fileStream,
+      Body: file.buffer, // ✅ use buffer directly
       ContentType: file.mimetype,
     },
   });
-
 
   upload.on("httpUploadProgress", (progress) => {
     console.log(progress);
@@ -54,8 +45,8 @@ export class S3Service {
   await upload.done();
   console.log("✅ File uploaded successfully!");
 
-    return `https://${this.bucketName}.s3.amazonaws.com/${fileName}`;
-  }
+  return `https://${this.bucketName}.s3.amazonaws.com/${fileName}`;
+}
 
   async uploadMultipleFiles(
     files: Express.Multer.File[],
