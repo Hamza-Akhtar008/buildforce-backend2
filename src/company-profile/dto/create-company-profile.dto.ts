@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateCompanyProfileDto {
+  
+
+
   @ApiProperty({ description: 'User ID to attach the profile to', example: 1 })
   @IsNotEmpty()
   id: bigint;

@@ -5,11 +5,12 @@ import { S3Service } from 'src/common/services/s3.service';
 import { UserModule } from 'src/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CompanyProfile } from './entities/company-profile.entity';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Module({
   controllers: [CompanyProfileController],
   providers: [CompanyProfileService, S3Service],
   exports: [CompanyProfileService],
-  imports: [TypeOrmModule.forFeature([CompanyProfile]), UserModule],
+  imports: [TypeOrmModule.forFeature([CompanyProfile]), UserModule,CreateUserDto],
 })
 export class CompanyProfileModule {}
