@@ -14,6 +14,10 @@ async function bootstrap() {
       transform: true,
     }),
   );
+   (BigInt.prototype as any).toJSON = function () {
+    return this.toString();
+  };
+
   setupSwagger(app);
   await app.listen(process.env.PORT || 5000);
 }

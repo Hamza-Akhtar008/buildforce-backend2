@@ -15,6 +15,8 @@ export class Project extends BaseEntity {
 
   @Column({ type: 'date' })
   startDate: Date;
+  @Column({ type: 'date' })
+  endDate: Date;
 
   @Column({ type: 'text' })
   description: string;

@@ -52,7 +52,7 @@ async create(createCompanyProfileDto: any) {
   const profileToSave = {
     id,
     ...profileData,
-    logo: logoUrl,
+    logoUrl: logoUrl,
   };
 
   await this.userService.updateStatus(Number(id), VerificationStatus.submitted);

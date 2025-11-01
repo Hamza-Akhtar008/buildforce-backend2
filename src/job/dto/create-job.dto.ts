@@ -1,59 +1,101 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsString,
-  IsNumberString,
-  IsNumber,
-} from 'class-validator';
-import { WorkDuration, Shift } from '../enums/job.enums';
-import { SkillLevel } from 'src/labour-profile/enums/enum';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { IsEnum, IsNotEmpty, IsOptional, IsString, IsArray, IsNumber } from 'class-validator'
+import { WorkDuration, Shift } from '../enums/job.enums'
+import { SkillLevel } from 'src/labour-profile/enums/enum'
 
 export class CreateJobDto {
-  @ApiProperty({ description: 'Job title', example: 'Job title' })
+  @ApiProperty({ example: 'Electrician', description: 'Job title' })
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title: string
 
   @ApiProperty({
-    description: 'Job description',
-    example: 'This is a job description',
+    example: 'Install electrical systems for a new commercial building. Must understand conduit bending and wiring safety standards.',
+    description: 'Full job description including duties, responsibilities, and requirements.',
   })
   @IsString()
   @IsNotEmpty()
-  description: string;
+  description: string
 
-  @ApiProperty({
-    description: 'Skills required (comma-separated string)',
-    example: '1,2,3',
-  })
+  @ApiPropertyOptional({ example: 'Hiring 10 workers', description: 'Optional hiring info' })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  skillsRequired: string;
+  hiringInfo?: string
 
-  @ApiProperty({ description: 'Salary (string)', example: '50$' })
+  @ApiPropertyOptional({ example: '2025-11-10', description: 'Job posting date' })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  salary: string;
+  postedOn?: string
 
-  @ApiProperty({ description: 'Job location' })
+  @ApiPropertyOptional({ example: '2025-11-20', description: 'Start date for the job' })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  location: string;
+  startDate?: string
 
-  @ApiProperty({ description: 'Work duration', enum: WorkDuration })
+  @ApiProperty({ enum: WorkDuration, description: 'Type of job duration' })
   @IsEnum(WorkDuration)
-  workDuration: WorkDuration;
+  workDuration: WorkDuration
 
-  @ApiProperty({ description: 'Shift', enum: Shift })
+  @ApiProperty({ enum: Shift, description: 'Shift type' })
   @IsEnum(Shift)
-  shift: Shift;
+  shift: Shift
 
-  @ApiProperty({ description: 'Skill level', enum: SkillLevel })
+  @ApiProperty({ enum: SkillLevel, description: 'Skill level required for this job' })
   @IsEnum(SkillLevel)
-  skillLevel: SkillLevel;
+  skillLevel: SkillLevel
 
-  @ApiProperty({ description: 'Project ID to attach this job to', example: 1 })
+  @ApiProperty({ example: '$25/hr', description: 'Salary or hourly rate' })
+  @IsString()
+  @IsNotEmpty()
+  salary: string
+
+  @ApiProperty({ example: 'Houston, TX 77070', description: 'Job location (short form)' })
+  @IsString()
+  @IsNotEmpty()
+  location: string
+
+  @ApiPropertyOptional({ example: '123 Industrial Rd, Houston, TX 77070', description: 'Full address (optional)' })
+  @IsOptional()
+  @IsString()
+  fullAddress?: string
+
+  @ApiPropertyOptional({ type: [String], example: ['M', 'T', 'W', 'Th', 'F'], description: 'Work schedule days' })
+  @IsOptional()
+  @IsArray()
+  scheduleDays?: string[]
+
+  @ApiPropertyOptional({ example: '6am - 4pm', description: 'Shift hours' })
+  @IsOptional()
+  @IsString()
+  shiftHours?: string
+
+  @ApiPropertyOptional({ example: 'Times are subject to change', description: 'Shift notes' })
+  @IsOptional()
+  @IsString()
+  shiftNote?: string
+
+  @ApiPropertyOptional({ type: [String], example: ['Commercial'], description: 'Experience types' })
+  @IsOptional()
+  @IsArray()
+  experience?: string[]
+
+  @ApiPropertyOptional({ type: [String], example: ['TDLR - Apprentice Electrician'], description: 'Licenses required' })
+  @IsOptional()
+  @IsArray()
+  licenses?: string[]
+
+  @ApiPropertyOptional({ type: [String], example: ['Bending Conduit', 'Rough In'], description: 'Skills required' })
+  @IsOptional()
+  @IsArray()
+  skills?: string[]
+
+  @ApiPropertyOptional({ type: [String], example: ['Health Insurance', 'Flexible Schedule'], description: 'Benefits offered' })
+  @IsOptional()
+  @IsArray()
+  benefits?: string[]
+
+  @ApiProperty({ example: 1, description: 'ID of associated project' })
   @IsNumber()
-  projectId: bigint;
+  @IsNotEmpty()
+  projectId: number
 }

@@ -25,6 +25,10 @@ export class CreateProjectDto {
   @IsDateString()
   @IsNotEmpty()
   startDate: string;
+  @ApiProperty({ description: 'Project end date', example: '2025-09-01' })
+  @IsDateString()
+  @IsNotEmpty()
+  endDate: string;
 
   @ApiProperty({ description: 'Project description' })
   @IsString()

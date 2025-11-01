@@ -41,7 +41,8 @@ async create(
 
   // 1️⃣ Create user
   const newUser = await this.userService.create(createUserWithCompanyDto.user);
- const logoFile = files?.find((f) => f.fieldname === 'logo');
+ const logoFile = createUserWithCompanyDto.companyProfile.logo;
+ console.log('Uploaded logo file:', logoFile);
   // 2️⃣ Create company profile
  const companyprofile = await this.companyProfileService.create({
       ...createUserWithCompanyDto.companyProfile,

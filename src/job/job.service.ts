@@ -4,18 +4,34 @@ import { Repository } from 'typeorm';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { Job } from './entities/job.entity';
+import { Project } from 'src/project/entities/project.entity';
 
 @Injectable()
 export class JobService {
   constructor(
     @InjectRepository(Job)
     private readonly jobRepository: Repository<Job>,
+    @InjectRepository(Project)
+  private readonly projectRepository: Repository<Project>,
+
   ) {}
 
-  async create(createJobDto: CreateJobDto) {
-    const job = this.jobRepository.create(createJobDto);
-    return await this.jobRepository.save(job);
+ async create(createJobDto: CreateJobDto) {
+  const project = await this.projectRepository.findOne({
+    where: { id: (createJobDto.projectId) },
+  });
+
+  if (!project) {
+    throw new NotFoundException(`Project with ID ${createJobDto.projectId} not found`);
   }
+
+  const job = this.jobRepository.create({
+    ...createJobDto,
+    projectId: BigInt(createJobDto.projectId),
+  });
+
+  return await this.jobRepository.save(job);
+}
 
   findAll() {
     return this.jobRepository.find();
@@ -34,7 +50,13 @@ export class JobService {
     if (!existing) {
       throw new NotFoundException('Job not found');
     }
-    return await this.jobRepository.update({ id }, updateJobDto);
+     const updatedJob = {
+    ...updateJobDto,
+    ...(updateJobDto.projectId && {
+      projectId: BigInt(updateJobDto.projectId), // 👈 convert here too
+    }),
+  };
+     return await this.jobRepository.update({ id }, updatedJob);
   }
 
   async remove(id: number) {
