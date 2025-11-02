@@ -14,6 +14,8 @@ import { ProjectModule } from './project/project.module';
 import { CompanyProfileModule } from './company-profile/company-profile.module';
 import { JobModule } from './job/job.module';
 import { JobApplicaitonModule } from './job-applicaiton/job-applicaiton.module';
+import { ContractorProfileModule } from './contractor-profile/contractor-profile.module';
+
 
 config();
 @Module({
@@ -43,6 +45,8 @@ config();
     ProjectModule,
     JobModule,
     JobApplicaitonModule,
+    ContractorProfileModule
+   
   ],
   controllers: [AppController],
   providers: [AppService],
