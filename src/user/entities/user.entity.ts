@@ -13,12 +13,14 @@ import {
   OneToOne,
   OneToMany,
 } from 'typeorm';
+import { ContractorProfile } from 'src/contractor-profile/entities/contractor-profile.entity';
 
 export enum UserRole {
   SuperAdmin = 'SuperAdmin',
   Company = 'Company',
   Admin = 'Admin',
   Labour = 'Labour',
+   Contractor = 'Contractor',
 }
 
 @Entity('users')
@@ -69,6 +71,8 @@ export class User {
     default: VerificationStatus.pending,
   })
   verificationStatus: VerificationStatus;
+  @OneToOne(() => ContractorProfile, (contractorProfile) => contractorProfile.user)
+contractorProfile?: ContractorProfile;
 
   // @OneToMany(() => Job, job => job.postedBy)
   // postedJobs: Job[];
